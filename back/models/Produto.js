@@ -2,27 +2,22 @@ const mongoose = require('../db/conn');
 const { Schema } = require('mongoose');
 
 
-const Produtos = mongoose.model(
-    'Produto', 
-    new Schema({
-        name:{
-            type: String,
-            required: true
-        },
-        
-        description:{
-            type: String,
-            required: true
+const Produto = mongoose.model(
+    'Produto', new Schema({
+
+        nome:{
+            type: String
         },
 
-        Valor:{
-            type: Number,
-            required: true
+        descricao:{
+            type: String
+        },
+
+        valor:{
+            type: Number
         }
-
-    },
-    {timestamps: true}
+    }, {timestamps: true}
     )
 );
 
-module.exports = Produtos;
+module.exports = Produto;
