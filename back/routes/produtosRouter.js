@@ -1,20 +1,52 @@
 const express = require('express');
 const router = express.Router();
-const model = require('../models/Produto');
+const model = require('../models/produtosModel');
+
+// Cadastrar Produto
+router.post('/register', async (req, res, next) =>{ 
+    
+
+    
+    const { nome, descricao, valor } = req.body;   
+
+    if(!nome){
+        res.status(400).json({message: 'O nome do produto é obrigatório!'});
+        return;
+    }
+
+    const produtoNew = {
+        nome,
+        descricao,
+        valor
+    }
+
+    try{
+        await model.create(produtoNew);
+        res.status(201).json({
+                message: 'Produto criado com sucesso!',
+                produtoNew
+            });
+        return;
+
+    }catch(err){
+        res.status(500).json({message: 'Erro ao cadastrar produto!', erro: err});
+        return;
+    }
+});
 
 
-// Buscar todos
+//Retorna todos os produtos
 router.get('/todos', async (req, res, next) =>{
 
     const produtos = await model.find();
 
     res.status(200).json({
         produtos
-    });
-    return;
+    })
 });
 
-// Buscar pelo Id 
+
+//Retorna registro pelo Id
 router.get('/:id', async(req, res, next) =>{
     const pId = req.params.id;
 
@@ -33,10 +65,11 @@ router.get('/:id', async(req, res, next) =>{
     }catch(err){
         res.status(500).json({message: 'Erro ao buscar registro!'})
         return;
-    }   
+    }
 });
 
-// Alterar registro
+
+//Atualiza registro pelo Id
 router.put('/:id', async (req, res, next) =>{
     const pId = req.params.id;
 
@@ -67,36 +100,6 @@ router.put('/:id', async (req, res, next) =>{
     }
 });
 
-// Cadastrar produto 
-router.post('/register', async (req, res, next) =>{   
-    
-    const { nome, descricao, valor } = req.body;
-
-    if(!nome){
-        res.status(400).json({message: 'O nome do produto é obrigatório!'});
-        return;
-    }
-
-    const produtoNew = {
-        nome,
-        descricao,
-        valor
-    }
-
-    try{
-        await model.create(produtoNew);
-        res.status(201).json({
-                message: 'Produto criado com sucesso!',
-                produtoNew
-            });
-        return;
-
-    }catch(err){
-        res.status(500).json({message: 'Erro ao cadastrar produto!', erro: err});
-        return;
-    }
-
-});
 
 // Apagar registro 
 router.delete('/:id', async (req, res, next) =>{
